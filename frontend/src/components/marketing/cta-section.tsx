@@ -29,14 +29,13 @@ export function CtaSection() {
                 a voice or face-to-face conversation. No pressure at any step.
               </p>
 
+              {/* One button, for the same reason as the hero: "Log in" sat
+                  beside this pointing at the identical page. */}
               <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                 <Button asChild size="xl" variant="gradient" className="w-full sm:w-auto">
                   <Link href="/sign-in">
                     Get started <ArrowRight className="size-4" />
                   </Link>
-                </Button>
-                <Button asChild size="xl" variant="outline" className="w-full sm:w-auto">
-                  <Link href="/sign-in">Log in</Link>
                 </Button>
               </div>
 

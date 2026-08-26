@@ -80,7 +80,7 @@ const sections: LegalSection[] = [
   },
   {
     heading: "Contact",
-    paragraphs: ["Questions about these terms go to legal@snugtalk.com."],
+    paragraphs: ["Questions about these terms go to legal@snugtalk.tech."],
   },
 ];
 

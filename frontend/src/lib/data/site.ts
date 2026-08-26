@@ -20,7 +20,12 @@ export const site = {
    */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://snugtalk.tech",
   locale: "en_US",
-  email: "hello@snugtalk.com",
+  /**
+   * Must match the domain we actually own. This read `@snugtalk.com` — a
+   * domain belonging to someone else — so every "contact us" link on the site
+   * sent mail to a stranger, and none of it ever reached us.
+   */
+  email: "hello@snugtalk.tech",
   twitter: "@snugtalk",
   /** Typical turnaround we promise on a meeting request. */
   requestResponseTime: "4 hours",

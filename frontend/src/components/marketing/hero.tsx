@@ -53,15 +53,16 @@ export function Hero() {
             </p>
           </RevealItem>
 
+          {/* One button. "Get started" and "Log in" both pointed at /sign-in,
+              so this was two buttons for one destination — and offering a
+              choice that isn't a choice just makes people stop and read twice.
+              The sign-in screen serves returning and new visitors alike. */}
           <RevealItem className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
             <Button asChild size="xl" variant="gradient" className="w-full sm:w-auto">
               <Link href="/sign-in">
                 Get started
                 <ArrowRight className="size-4" />
               </Link>
-            </Button>
-            <Button asChild size="xl" variant="outline" className="w-full sm:w-auto">
-              <Link href="/sign-in">Log in</Link>
             </Button>
           </RevealItem>
 

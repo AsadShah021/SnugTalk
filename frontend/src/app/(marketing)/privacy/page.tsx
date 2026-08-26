@@ -70,7 +70,7 @@ const sections: LegalSection[] = [
   {
     heading: "Contact",
     paragraphs: [
-      "Privacy questions go to privacy@snugtalk.com and are answered by a person, usually within two working days.",
+      "Privacy questions go to privacy@snugtalk.tech and are answered by a person, usually within two working days.",
     ],
   },
 ];
