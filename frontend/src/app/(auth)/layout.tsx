@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { ArrowLeft, Quote, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
 
 import { Logo, LogoMark } from "@/components/brand/logo";
-import { ListenerAvatar } from "@/components/brand/listener-avatar";
 import { ThemeToggle } from "@/components/brand/theme-toggle";
 import { AuroraBackdrop } from "@/components/motion/aurora-backdrop";
 import { trustPoints } from "@/lib/data/marketing";
+import { site } from "@/lib/data/site";
 
 export default function AuthLayout({
   children,
@@ -24,22 +24,25 @@ export default function AuthLayout({
           <Logo />
         </div>
 
+        {/*
+         * This was a testimonial: an invented member, "Dara Osei · Founder ·
+         * Professional plan", quoted praising a session that never happened.
+         * It's the last of the fabricated reviews.
+         *
+         * A founder's note belongs here and would be honest — Shafqat really is
+         * the founder. But the words have to be his. `lib/data/founders.ts`
+         * already holds his name, role and photo with an empty `letter` waiting
+         * for exactly that; drop it in and this panel can carry it.
+         */}
         <div className="relative max-w-md">
-          <Quote className="text-primary/30 mb-6 size-9" aria-hidden />
-          <blockquote className="text-2xl leading-[1.35] font-semibold tracking-[-0.025em]">
-            &ldquo;I&rsquo;d pitched the same idea to eight friends and they all
-            said it was great. Forty minutes with a listener and I finally heard
-            the part I&rsquo;d been skipping over.&rdquo;
-          </blockquote>
-          <figcaption className="mt-7 flex items-center gap-3">
-            <ListenerAvatar name="Dara Osei" size="md" />
-            <div>
-              <p className="text-sm font-medium">Dara Osei</p>
-              <p className="text-muted-foreground text-xs">
-                Founder · Professional plan
-              </p>
-            </div>
-          </figcaption>
+          <p className="text-2xl leading-[1.35] font-semibold tracking-[-0.025em]">
+            {site.tagline}
+          </p>
+          <p className="text-muted-foreground mt-5 leading-relaxed">
+            Chat with us any time, or ask for a voice or Google Meet
+            conversation and we&rsquo;ll find a time that suits you. Real
+            people, no scripts, no judgment.
+          </p>
         </div>
 
         <ul className="text-muted-foreground relative flex flex-wrap gap-x-6 gap-y-2 text-xs">

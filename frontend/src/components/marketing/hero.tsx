@@ -89,11 +89,7 @@ export function Hero() {
         <Reveal delay={0.2} className="mt-14 text-center">
           <p className="text-muted-foreground mx-auto max-w-2xl text-xs leading-relaxed">
             SnugTalk is a human connection service — not therapy, counseling, or
-            mental health treatment.{" "}
-            <Link href="/#safety" className="hover:text-foreground underline underline-offset-4">
-              Read what that means
-            </Link>
-            .
+            mental health treatment.
           </p>
         </Reveal>
       </div>

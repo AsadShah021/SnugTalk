@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Check, X } from "lucide-react";
 
 import { Reveal } from "@/components/motion/reveal";
@@ -86,14 +85,7 @@ export function NotTherapy() {
         <Reveal delay={0.15} className="mt-8 text-center">
           <p className="text-muted-foreground mx-auto max-w-2xl text-sm leading-relaxed">
             If you are in crisis or need clinical care, please contact a licensed
-            provider or your local emergency services.{" "}
-            <Link
-              href="/#safety"
-              className="text-foreground font-medium underline underline-offset-4"
-            >
-              See our safety resources
-            </Link>
-            .
+            provider or your local emergency services.
           </p>
         </Reveal>
       </div>

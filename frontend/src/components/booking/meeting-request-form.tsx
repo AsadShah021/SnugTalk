@@ -228,11 +228,7 @@ export function MeetingRequestForm() {
         <p className="text-muted-foreground flex items-start gap-2 text-xs leading-relaxed">
           <ShieldCheck className="mt-0.5 size-3.5 shrink-0" />
           Nothing is booked yet — we&rsquo;ll agree a time with you first.
-          SnugTalk is a listening service, not therapy or crisis support.{" "}
-          <Link href="/#safety" className="underline underline-offset-2">
-            See our safety page
-          </Link>
-          .
+          SnugTalk is a listening service, not therapy or crisis support.
         </p>
       </form>
 

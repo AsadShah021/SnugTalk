@@ -3,7 +3,6 @@ import { FaqSection } from "@/components/marketing/faq-section";
 import { Hero } from "@/components/marketing/hero";
 import { HowItWorks } from "@/components/marketing/how-it-works";
 import { NotTherapy } from "@/components/marketing/not-therapy";
-import { SafetySection } from "@/components/marketing/safety-section";
 import { Testimonials } from "@/components/marketing/testimonials";
 import { TrustBar } from "@/components/marketing/trust-bar";
 import { faqs } from "@/lib/data/marketing";
@@ -37,7 +36,6 @@ export default function HomePage() {
       <HowItWorks />
       <Testimonials />
       <NotTherapy />
-      <SafetySection />
       <FaqSection />
       <CtaSection />
     </>

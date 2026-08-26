@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Check, LifeBuoy, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -98,11 +97,7 @@ export function ScopeLimits({
           </dl>
           <p className="text-muted-foreground mt-4 text-xs leading-relaxed">
             If you are in immediate danger, contact your local emergency services
-            — we are not monitored for emergencies. Our{" "}
-            <Link href="/#safety" className="text-foreground underline underline-offset-2">
-              safety page
-            </Link>{" "}
-            lists crisis lines too.
+            — we are not monitored for emergencies.
           </p>
         </div>
       )}

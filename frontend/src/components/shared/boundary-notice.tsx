@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { LifeBuoy, ShieldAlert } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -29,11 +28,7 @@ export function BoundaryNotice({
         <ShieldAlert className="text-warning mt-0.5 size-3.5 shrink-0" />
         <span>
           We listen — we don&rsquo;t diagnose or treat. If you&rsquo;re at risk of
-          harm,{" "}
-          <Link href="/#safety" className="text-foreground underline underline-offset-2">
-            get help now
-          </Link>
-          .
+          harm, contact your local emergency services.
         </span>
       </p>
     );
@@ -71,13 +66,6 @@ export function BoundaryNotice({
             please contact your local emergency services rather than waiting for
             a reply here.
           </p>
-          <Link
-            href="/#safety"
-            className="text-foreground hover:text-primary mt-4 inline-flex items-center gap-1.5 text-sm font-medium underline underline-offset-4 transition-colors"
-          >
-            <LifeBuoy className="size-3.5" />
-            Crisis and support resources
-          </Link>
         </div>
       </div>
     </aside>

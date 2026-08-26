@@ -150,11 +150,7 @@ export default function DashboardPage() {
               </p>
               <p>
                 SnugTalk is a listening service — not therapy, counseling or
-                crisis support.{" "}
-                <Link href="/#safety" className="text-foreground underline underline-offset-2">
-                  Safety resources
-                </Link>
-                .
+                crisis support.
               </p>
             </CardContent>
           </Card>

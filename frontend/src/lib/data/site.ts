@@ -140,7 +140,6 @@ export const footerNav: { title: string; items: NavItem[] }[] = [
     items: [
       { label: "Privacy policy", href: "/privacy" },
       { label: "Terms of service", href: "/terms" },
-      { label: "Safety & crisis resources", href: "/#safety" },
     ],
   },
 ];
