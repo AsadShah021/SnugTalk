@@ -51,7 +51,7 @@ const sections: LegalSection[] = [
   {
     heading: "How long we keep things",
     paragraphs: [
-      "Conversation history retention follows your plan — 90 days on Starter, 12 months on Professional, indefinitely on Premium — and you can shorten this or turn history off entirely in your settings.",
+      "We keep your conversation history for as long as your account exists, so you can pick a thread back up months later. You can delete any conversation yourself at any time, and deleting your account removes all of it.",
       "When you delete your account we remove your personal data within 30 days, excluding anonymised billing records we are legally required to retain.",
     ],
   },

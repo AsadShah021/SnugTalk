@@ -12,7 +12,7 @@ const sections: LegalSection[] = [
   {
     heading: "What SnugTalk is",
     paragraphs: [
-      "SnugTalk is a subscription service that connects members with trained human listeners for non-clinical conversations by text, voice, or video.",
+      "SnugTalk connects members with trained human listeners for non-clinical conversations by text, voice, or video.",
       "SnugTalk is not therapy, counseling, psychotherapy, or mental health treatment. Listeners do not diagnose conditions, provide clinical advice, prescribe anything, or deliver any form of medical or psychological care. Nothing said in a session should be treated as professional advice of any kind — medical, legal, financial, or otherwise.",
       "If you are experiencing a mental health crisis or a medical emergency, contact your local emergency services or a licensed professional immediately. Our listeners are trained to recognise these situations and will end a session to direct you to appropriate help.",
     ],
@@ -23,25 +23,29 @@ const sections: LegalSection[] = [
       "You must be at least 18 years old to hold an account. Accounts are personal and may not be shared, resold, or used on behalf of another person without their knowledge.",
     ],
   },
+  /*
+   * This section used to set out billing terms for Starter, Professional and
+   * Unlimited plans — renewal, proration, rollover, refunds, per-day fair use.
+   * None of it existed: there is no pricing page, no plans and no billing in
+   * the product. Terms are a contract, so describing commercial terms we don't
+   * operate is worse than saying nothing.
+   *
+   * When plans do launch, the old wording is in git history at the commit that
+   * removed it — restore it alongside a real pricing page, not before.
+   */
   {
-    heading: "Subscriptions and billing",
+    heading: "What it costs",
     paragraphs: [
-      "Plans are billed monthly or annually in advance and renew automatically until cancelled. Your session allowance resets on your billing date.",
-      "Unused sessions on the Starter and Professional plans roll over for one billing period. Unlimited plans are subject to a fair-use limit of two sessions per day.",
-    ],
-    bullets: [
-      "Cancel at any time from your subscription settings — access continues until the end of the paid period",
-      "Upgrades take effect immediately and are prorated; downgrades take effect at the next billing date",
-      "We do not offer partial refunds for unused time on a cancelled subscription",
-      "If a session falls short, tell us within 48 hours and we will credit it back to your allowance",
+      "SnugTalk is free while we are in testing. There are no plans, no subscriptions and no billing — we do not ask for a card, and there is nothing to cancel.",
+      "If we introduce paid plans we will publish the prices and terms here first, and we will email you before anything you use becomes chargeable. Nothing you do today will be billed to you later.",
     ],
   },
   {
     heading: "Meeting requests and cancellations",
     paragraphs: [
-      "Voice and Google Meet sessions are arranged by request rather than self-serve booking. Submitting a request does not reserve a time: nothing is confirmed, and nothing is counted against your allowance, until we email you a confirmed slot. We aim to respond within four hours and will always respond, including when we cannot offer any of the times you gave us.",
-      "Once a session is confirmed you may reschedule or cancel free of charge up to four hours before it starts. Sessions cancelled inside that window, or missed without notice, count against your monthly allowance.",
-      "If we cancel or fail to attend, the session is credited back to you automatically and we will arrange a replacement.",
+      "Voice and Google Meet sessions are arranged by request rather than self-serve booking. Submitting a request does not reserve a time: nothing is confirmed until we email you a confirmed slot. We aim to respond within four hours and will always respond, including when we cannot offer any of the times you gave us.",
+      "Once a session is confirmed you may reschedule or cancel at any point before it starts — just tell us. If you miss one without notice we will follow up rather than penalise you.",
+      "If we cancel or fail to attend, we will apologise and arrange a replacement.",
     ],
   },
   {
@@ -54,14 +58,14 @@ const sections: LegalSection[] = [
   {
     heading: "Acceptable conduct",
     paragraphs: [
-      "Listeners are people doing skilled work. Abuse, harassment, discriminatory language, sexual solicitation, or attempts to move a conversation off-platform will end a session immediately and may end your account without refund.",
+      "Listeners are people doing skilled work. Abuse, harassment, discriminatory language, sexual solicitation, or attempts to move a conversation off-platform will end a session immediately and may end your account.",
       "You may not record sessions. You may not use the service to obtain services we do not provide, including clinical care, legal representation, or financial advice.",
     ],
   },
   {
     heading: "Who your listener is",
     paragraphs: [
-      "Every listener is a member of the SnugTalk in-house team. We do not operate a marketplace, we do not engage freelance or contract listeners, and we are not recruiting — the people named on our team page are the only people who will ever reply to you.",
+      "Every listener is a member of the SnugTalk in-house team. We do not operate a marketplace, we do not engage freelance or contract listeners, and we are not recruiting — a small in-house team is the only group of people who will ever reply to you.",
       "They are trained and supervised, but they are not licensed clinicians acting in a clinical capacity through this service, and nothing they say is clinical advice.",
     ],
   },

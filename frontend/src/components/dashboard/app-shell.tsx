@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Menu, Plus, Search } from "lucide-react";
+import { Menu, Plus } from "lucide-react";
 
 import {
   AppSidebar,
@@ -13,7 +13,6 @@ import { NotificationBell } from "@/components/dashboard/notification-bell";
 import { ThemeToggle } from "@/components/brand/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
@@ -22,14 +21,12 @@ export function AppShell({
   user,
   sidebarFooter,
   primaryAction,
-  searchPlaceholder = "Search…",
   children,
 }: {
   sections: SidebarSection[];
   user: { name: string; caption: string; href: string };
   sidebarFooter?: React.ReactNode;
   primaryAction?: { label: string; href: string };
-  searchPlaceholder?: string;
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -77,14 +74,10 @@ export function AppShell({
             </SheetContent>
           </Sheet>
 
-          <div className="relative hidden max-w-sm flex-1 sm:block">
-            <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2" />
-            <Input
-              placeholder={searchPlaceholder}
-              aria-label="Search"
-              className="bg-background/60 h-10 pl-10"
-            />
-          </div>
+          {/* A search box sat here with a placeholder and an aria-label but no
+              state, no handler and no endpoint behind it — typing did nothing.
+              The admin user list has its own working search; this one only
+              promised a feature that didn't exist. */}
 
           <div className="ml-auto flex items-center gap-1.5">
             <NotificationBell />

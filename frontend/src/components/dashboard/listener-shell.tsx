@@ -55,7 +55,6 @@ export function ListenerShell({ children }: { children: React.ReactNode }) {
         caption: user?.email ?? "Signed in",
         href: "/listener/availability",
       }}
-      searchPlaceholder="Search chats, requests, clients and notes…"
       primaryAction={{ label: "Open requests", href: "/listener/requests" }}
       sidebarFooter={
         <div className="border-sidebar-border bg-sidebar-accent/50 rounded-2xl border p-4">

@@ -3,7 +3,6 @@ import { ArrowRight, ShieldCheck } from "lucide-react";
 
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { disclaimer, footerNav, site } from "@/lib/data/site";
 
@@ -19,21 +18,17 @@ export function SiteFooter() {
               conversations, over text, voice, or face to face.
             </p>
 
-            <form className="flex max-w-sm gap-2" aria-label="Newsletter signup">
-              <Input
-                type="email"
-                required
-                placeholder="you@example.com"
-                aria-label="Email address"
-                className="h-10"
-              />
-              <Button type="submit" size="sm" className="h-10 shrink-0">
-                Subscribe
-              </Button>
-            </form>
-            <p className="text-muted-foreground text-xs">
-              Occasional notes on listening well. No spam, unsubscribe anytime.
-            </p>
+            {/*
+             * A newsletter form stood here with no submit handler and no `name`
+             * on its input, so pressing Subscribe discarded the address and
+             * said nothing. Collecting an email address and silently dropping
+             * it is worse than not asking: the person believes they subscribed.
+             *
+             * Bring it back when there is a list to add them to — Resend
+             * audiences plus an endpoint — along with real success and error
+             * states. The footer already carries a "Get started" below, so
+             * nothing replaces it here.
+             */}
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">

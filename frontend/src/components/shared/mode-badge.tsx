@@ -2,11 +2,17 @@ import { sessionModeMap } from "@/lib/data/site";
 import { cn } from "@/lib/utils";
 import type { SessionMode } from "@/types";
 
+/*
+ * Text uses the `-on-tint` tokens. The brand colours themselves are correct
+ * for fills and large type, but as 12px chip text on a 10-14% tint of the
+ * same hue they failed WCAG AA — rose measured 2.27:1 against a 4.5:1 bar.
+ * The tint and ring keep the original colour, so the coding is unchanged.
+ */
 export const toneClasses: Record<string, string> = {
-  violet: "bg-brand-violet/10 text-brand-violet ring-brand-violet/20",
-  teal: "bg-brand-teal/12 text-brand-teal ring-brand-teal/25",
-  amber: "bg-brand-amber/14 text-brand-amber ring-brand-amber/25",
-  rose: "bg-brand-rose/12 text-brand-rose ring-brand-rose/25",
+  violet: "bg-brand-violet/10 text-brand-violet-on-tint ring-brand-violet/20",
+  teal: "bg-brand-teal/12 text-brand-teal-on-tint ring-brand-teal/25",
+  amber: "bg-brand-amber/14 text-brand-amber-on-tint ring-brand-amber/25",
+  rose: "bg-brand-rose/12 text-brand-rose-on-tint ring-brand-rose/25",
 };
 
 /** Small labelled chip identifying how a conversation happens. */

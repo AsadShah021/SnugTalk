@@ -13,12 +13,15 @@ const badgeVariants = cva(
         secondary: "border-transparent bg-secondary text-secondary-foreground",
         outline: "border-border text-foreground",
         muted: "border-transparent bg-muted text-muted-foreground",
-        success: "border-transparent bg-success/12 text-success",
-        warning: "border-transparent bg-warning/15 text-warning",
-        info: "border-transparent bg-info/12 text-info",
-        destructive: "border-transparent bg-destructive/12 text-destructive",
+        // Text uses the `-on-tint` tokens, not the base colour: the base is
+        // tuned for fills and icons and fails AA as small text on its own tint.
+        success: "border-transparent bg-success/12 text-success-on-tint",
+        warning: "border-transparent bg-warning/15 text-warning-on-tint",
+        info: "border-transparent bg-info/12 text-info-on-tint",
+        destructive:
+          "border-transparent bg-destructive/12 text-destructive-on-tint",
         brand:
-          "border-primary/20 bg-primary/8 text-primary dark:bg-primary/12",
+          "border-primary/20 bg-primary/8 text-brand-violet-on-tint dark:bg-primary/12",
       },
     },
     defaultVariants: { variant: "default" },

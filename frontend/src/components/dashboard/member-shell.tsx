@@ -50,7 +50,6 @@ export function MemberShell({ children }: { children: React.ReactNode }) {
         caption: user?.email ?? "Signed in",
         href: "/dashboard/settings",
       }}
-      searchPlaceholder="Search your messages and meetings…"
       primaryAction={{ label: "Schedule a meeting", href: "/book" }}
     >
       {children}

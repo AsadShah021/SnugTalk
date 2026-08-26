@@ -97,7 +97,6 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <AppShell
       sections={sections}
       user={{ name: user.name, caption: "Administrator", href: "/admin/users" }}
-      searchPlaceholder="Search tickets, messages and users…"
       primaryAction={{ label: "Open tickets", href: "/admin/tickets" }}
     >
       {children}
