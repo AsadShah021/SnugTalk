@@ -94,3 +94,36 @@ export function verificationEmail(name: string, code: string): Omit<Mail, "to"> 
     ),
   };
 }
+
+/**
+ * Password reset code.
+ *
+ * Deliberately says what to do if it wasn't you: a reset email nobody asked for
+ * is the first sign somebody else knows the address, and the one thing we can
+ * usefully tell them is that the password has not changed yet.
+ */
+export function passwordResetEmail(name: string, code: string): Omit<Mail, "to"> {
+  const firstName = name.split(" ")[0] ?? name;
+
+  return {
+    subject: `${code} is your SnugTalk reset code`,
+    text:
+      `Hi ${firstName},\n\n` +
+      `Your SnugTalk password reset code is ${code}\n\n` +
+      `It expires in 10 minutes. If you didn't ask to reset your password, you can ignore this email — your password has not been changed.\n`,
+    html: shell(
+      `Hi ${firstName},`,
+      `<p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#57534e;">
+         Here's the code to set a new password.
+       </p>
+       <p style="margin:0 0 24px;padding:20px;background:#f6f6f5;border-radius:12px;text-align:center;
+                 font-size:32px;font-weight:600;letter-spacing:0.22em;font-variant-numeric:tabular-nums;">
+         ${code}
+       </p>
+       <p style="margin:0;font-size:13px;line-height:1.6;color:#78716c;">
+         It expires in 10 minutes. If you didn't ask for this, you can ignore this
+         email — your password has not been changed.
+       </p>`,
+    ),
+  };
+}

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { API_BASE, ApiError } from "@/lib/api";
+import { api, API_BASE, ApiError } from "@/lib/api";
 import { isStaff, landingFor, useAuth } from "@/lib/auth";
 import { easeOutExpo } from "@/lib/motion";
 
@@ -59,6 +59,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const [loading, setLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [sent, setSent] = React.useState(false);
+  // Carried into the second step so we can send it back with the code — the
+  // person shouldn't have to type their address twice.
+  const [resetEmail, setResetEmail] = React.useState("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -70,13 +73,27 @@ export function AuthForm({ mode }: { mode: Mode }) {
     setLoading(true);
 
     if (mode === "forgot") {
-      // Password reset needs an email service; not wired yet.
-      await new Promise((resolve) => setTimeout(resolve, 600));
+      /*
+       * This used to wait 600ms and then claim a reset link had been sent.
+       * Nothing was ever sent and no endpoint existed, so anyone locked out
+       * was told help was coming and then left waiting for it.
+       *
+       * The API answers identically whether or not the address has an account,
+       * so there is nothing here to branch on — and nothing to leak.
+       */
+      try {
+        await api.post("/api/auth/forgot-password", { email });
+      } catch (error) {
+        setLoading(false);
+        toast.error(
+          error instanceof ApiError ? error.message : "Something went wrong. Try again.",
+        );
+        return;
+      }
+
       setLoading(false);
+      setResetEmail(email);
       setSent(true);
-      toast.success("Reset link sent", {
-        description: "Check your inbox — the link is valid for one hour.",
-      });
       return;
     }
 
@@ -134,22 +151,112 @@ export function AuthForm({ mode }: { mode: Mode }) {
     router.refresh();
   }
 
+  /** Step two: the code from the email, plus whatever they want the password to be. */
+  async function handleReset(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const code = String(form.get("code") ?? "").trim();
+    const password = String(form.get("password") ?? "");
+
+    setLoading(true);
+    try {
+      await api.post("/api/auth/reset-password", { email: resetEmail, code, password });
+    } catch (error) {
+      setLoading(false);
+      toast.error(
+        error instanceof ApiError ? error.message : "Something went wrong. Try again.",
+      );
+      return;
+    }
+
+    setLoading(false);
+    toast.success("Password changed", { description: "Sign in with your new password." });
+    // No session is issued by the reset, so signing in is the next step — and
+    // it proves they can actually use what they just set.
+    router.push("/sign-in");
+  }
+
   if (mode === "forgot" && sent) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: easeOutExpo }}
-        className="flex flex-col gap-5 text-center"
+        className="flex flex-col gap-7"
       >
-        <h1 className="text-2xl font-semibold tracking-[-0.025em]">Check your inbox</h1>
-        <p className="text-muted-foreground text-sm leading-relaxed">
-          If an account exists for that address, we&rsquo;ve sent a reset link.
-          It expires in one hour.
+        <header className="flex flex-col gap-2">
+          <h1 className="text-2xl font-semibold tracking-[-0.025em] sm:text-3xl">
+            Check your inbox
+          </h1>
+          <p className="text-muted-foreground text-sm leading-relaxed">
+            {/* Deliberately conditional-free: the API doesn't tell us whether
+                that address has an account, and neither should this screen. */}
+            If an account exists for <span className="text-foreground">{resetEmail}</span>,
+            we&rsquo;ve sent a 6-digit code. It expires in 10 minutes.
+          </p>
+        </header>
+
+        <form onSubmit={handleReset} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="code">6-digit code</Label>
+            <Input
+              id="code"
+              name="code"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              required
+              pattern="\d{6}"
+              maxLength={6}
+              placeholder="123456"
+              className="text-center text-lg tracking-[0.4em] tabular-nums"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="password">New password</Label>
+            <div className="relative">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                required
+                minLength={8}
+                autoComplete="new-password"
+                placeholder="At least 8 characters"
+                className="pr-11"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 absolute top-1/2 right-1 grid size-9 -translate-y-1/2 place-items-center rounded-lg transition-colors outline-none focus-visible:ring-[3px]"
+              >
+                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
+          </div>
+
+          <Button type="submit" variant="gradient" size="lg" disabled={loading} className="mt-2">
+            {loading ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <>
+                Set new password <ArrowRight className="size-4" />
+              </>
+            )}
+          </Button>
+        </form>
+
+        <p className="text-muted-foreground text-center text-sm">
+          Didn&rsquo;t get it?{" "}
+          <button
+            type="button"
+            onClick={() => setSent(false)}
+            className="text-foreground font-medium underline underline-offset-4"
+          >
+            Try another address
+          </button>
         </p>
-        <Button asChild variant="outline">
-          <Link href="/sign-in">Back to sign in</Link>
-        </Button>
       </motion.div>
     );
   }

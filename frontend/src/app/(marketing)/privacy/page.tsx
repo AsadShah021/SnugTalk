@@ -12,10 +12,10 @@ const sections: LegalSection[] = [
   {
     heading: "What we collect",
     paragraphs: [
-      "We collect the minimum needed to run a scheduling and messaging product: your name, email address, timezone, billing details (held by our payment processor, never by us), and the content of the text conversations you choose to have.",
+      "We collect the minimum needed to run a scheduling and messaging product: your name, email address, and the content of the text conversations you choose to have. There is no billing, so we hold no payment details at all.",
     ],
     bullets: [
-      "Account details — name, email, timezone, preferred conversation format",
+      "Account details — your name and email address",
       "Booking data — which listener, which format, when, and any topic note you write",
       "Message content — encrypted in transit and at rest",
       "Basic product analytics — page views and feature usage, never tied to conversation content",
@@ -51,14 +51,14 @@ const sections: LegalSection[] = [
   {
     heading: "How long we keep things",
     paragraphs: [
-      "We keep your conversation history for as long as your account exists, so you can pick a thread back up months later. You can delete any conversation yourself at any time, and deleting your account removes all of it.",
-      "When you delete your account we remove your personal data within 30 days, excluding anonymised billing records we are legally required to retain.",
+      "We keep your conversation history for as long as your account exists, so you can pick a thread back up months later.",
+      "Deleting your account removes it immediately, along with your conversations and every message in them. Meeting requests are kept as a record that a session was arranged, with your name and email removed from them.",
     ],
   },
   {
     heading: "Your rights",
     paragraphs: [
-      "Wherever you live, you can export everything we hold about you, correct anything inaccurate, and delete your account and its contents. Export and delete are both one-click actions in your settings — you never need to email us to exercise them.",
+      "Wherever you live, you can export everything we hold about you, correct anything inaccurate, and delete your account and its contents. Both live in your settings — export downloads a JSON file, and delete asks you to type DELETE first because it cannot be undone. You never need to email us to exercise either.",
     ],
   },
   {

@@ -10,7 +10,12 @@ import {
   verifyPassword,
 } from "../lib/auth.js";
 import { ApiError } from "../lib/errors.js";
-import { issueEmailOtp, verifyEmailOtp } from "../lib/otp.js";
+import {
+  consumePasswordResetOtp,
+  issueEmailOtp,
+  issuePasswordResetOtp,
+  verifyEmailOtp,
+} from "../lib/otp.js";
 import { prisma } from "../lib/prisma.js";
 import { requireAuth } from "../middleware/auth.js";
 import { googleRoutes } from "./google.routes.js";
@@ -185,6 +190,66 @@ authRoutes.post("/login", authLimiter, async (req, res) => {
   });
 });
 
+/* ---------------------------- Password reset ----------------------------- */
+
+const forgotBody = z.object({
+  email: z.string().trim().toLowerCase().email("Enter a valid email address").max(191),
+});
+
+const resetBody = z.object({
+  email: z.string().trim().toLowerCase().email("Enter a valid email address").max(191),
+  code: z.string().trim().regex(/^\d{6}$/, "Enter the 6-digit code"),
+  password: z.string().min(8, "Use at least 8 characters").max(200),
+});
+
+/**
+ * Ask for a reset code.
+ *
+ * Always answers the same way, whether or not the address has an account.
+ * Anything else turns this into a way to test which emails are registered —
+ * on a service people use precisely because it is private, confirming that
+ * somebody has an account here is itself the leak.
+ */
+authRoutes.post("/forgot-password", authLimiter, async (req, res) => {
+  const { email } = forgotBody.parse(req.body);
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { id: true, name: true, email: true },
+  });
+
+  if (user) {
+    try {
+      await issuePasswordResetOtp(user);
+    } catch {
+      // A send failure must not change the answer either — the timing and the
+      // body stay identical whatever happened.
+    }
+  }
+
+  res.json({ ok: true });
+});
+
+/** Spend the code and set the new password. */
+authRoutes.post("/reset-password", authLimiter, async (req, res) => {
+  const { email, code, password } = resetBody.parse(req.body);
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { id: true },
+  });
+
+  // Same message the wrong-code path gives, so a missing account is
+  // indistinguishable from a bad code.
+  if (!user) throw ApiError.badRequest("That code isn't right, or it has expired");
+
+  await consumePasswordResetOtp(user.id, code, await hashPassword(password));
+
+  // Deliberately no session cookie: whoever just reset signs in with the new
+  // password, which proves they hold it and keeps one path into the account.
+  res.json({ ok: true });
+});
+
 authRoutes.post("/logout", (_req, res) => {
   clearSessionCookie(res);
   res.status(204).end();
@@ -210,6 +275,93 @@ authRoutes.get("/me", requireAuth, async (req, res) => {
 });
 
 /** End an impersonation session and restore the admin's own. */
+/* ------------------------------ The account ------------------------------ */
+
+const profileBody = z.object({
+  name: z.string().trim().min(1, "Tell us your name").max(120),
+});
+
+/** Change your display name. Email has its own flow, because it needs a code. */
+authRoutes.patch("/profile", requireAuth, async (req, res) => {
+  const { name } = profileBody.parse(req.body);
+
+  const user = await prisma.user.update({
+    where: { id: req.user!.id },
+    data: { name },
+    select: publicUser,
+  });
+
+  res.json({ user });
+});
+
+/**
+ * Everything we hold about the caller, as JSON.
+ *
+ * The privacy policy promises this as a one-click action, so it has to be
+ * complete: the account row, every meeting request, and every message in
+ * every conversation they are part of.
+ */
+authRoutes.get("/export", requireAuth, async (req, res) => {
+  const id = req.user!.id;
+
+  const [user, requests, conversations] = await Promise.all([
+    prisma.user.findUnique({ where: { id }, select: publicUser }),
+    prisma.meetingRequest.findMany({
+      where: { userId: id },
+      orderBy: { createdAt: "asc" },
+      select: {
+        reference: true, name: true, email: true, topic: true, status: true,
+        scheduledFor: true, meetUrl: true, createdAt: true, updatedAt: true,
+      },
+    }),
+    prisma.conversation.findMany({
+      where: { memberId: id },
+      orderBy: { createdAt: "asc" },
+      select: {
+        id: true, status: true, createdAt: true, lastMessageAt: true,
+        messages: {
+          orderBy: { createdAt: "asc" },
+          select: {
+            body: true, createdAt: true, readAt: true,
+            sender: { select: { name: true, role: true } },
+          },
+        },
+      },
+    }),
+  ]);
+
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Content-Disposition", 'attachment; filename="snugtalk-my-data.json"');
+  res.send(
+    JSON.stringify({ exportedAt: new Date().toISOString(), user, requests, conversations }, null, 2),
+  );
+});
+
+/**
+ * Delete the account and everything personal attached to it.
+ *
+ * Conversations, messages, connection requests, codes and any listener profile
+ * cascade away with the row. Meeting requests deliberately do not — the team
+ * needs the record that a slot was booked — so the identifying columns on them
+ * are overwritten first. `onDelete: SetNull` only clears the foreign key; the
+ * name and email are ordinary columns and would otherwise survive the deletion
+ * the policy promises.
+ */
+authRoutes.delete("/account", requireAuth, async (req, res) => {
+  const id = req.user!.id;
+
+  await prisma.$transaction([
+    prisma.meetingRequest.updateMany({
+      where: { userId: id },
+      data: { name: "Deleted account", email: "deleted@example.invalid" },
+    }),
+    prisma.user.delete({ where: { id } }),
+  ]);
+
+  clearSessionCookie(res);
+  res.status(204).end();
+});
+
 authRoutes.post("/stop-impersonating", requireAuth, async (req, res) => {
   const adminId = req.user!.impersonatedBy;
   if (!adminId) throw ApiError.badRequest("You aren't impersonating anyone");

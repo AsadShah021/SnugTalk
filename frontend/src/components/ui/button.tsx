@@ -12,7 +12,7 @@ const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground shadow-[0_1px_2px_rgba(0,0,0,0.08),0_10px_28px_-12px_var(--primary)] hover:brightness-110 hover:shadow-[0_1px_2px_rgba(0,0,0,0.08),0_16px_38px_-14px_var(--primary)]",
         gradient:
-          "text-white shadow-[0_10px_34px_-12px_var(--brand-violet)] bg-[linear-gradient(100deg,var(--brand-violet),color-mix(in_oklab,var(--brand-violet)_60%,var(--brand-rose))_58%,var(--brand-amber))] bg-[length:200%_auto] hover:bg-[position:100%_center] hover:shadow-[0_16px_44px_-14px_var(--brand-violet)]",
+          "text-white shadow-[0_10px_34px_-12px_var(--brand-violet)] bg-[linear-gradient(100deg,var(--brand-violet),color-mix(in_oklab,var(--brand-violet)_80%,var(--brand-rose))_58%,var(--cta-gradient-end))] bg-[length:200%_auto] hover:bg-[position:100%_center] hover:shadow-[0_16px_44px_-14px_var(--brand-violet)]",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/70 border border-transparent",
         outline:

@@ -44,6 +44,16 @@
   --brand-teal: oklch(0.66 0.1 197);
   --brand-rose: oklch(0.73 0.13 15);
 
+  /*
+   * Endpoint for the primary CTA gradient.
+   *
+   * The button used --brand-amber here. That colour is right for glows and
+   * aurora, but the CTA is 200% wide and slides to its right-hand half on
+   * hover, so hovering put white 16px text on amber at 2.10:1 against a 4.5:1
+   * requirement. Same warm hue, dark enough to carry white text.
+   */
+  --cta-gradient-end: oklch(0.52 0.13 50);
+
   /* Semantic status */
   --success: oklch(0.6 0.13 155);
   --success-foreground: oklch(0.985 0.005 280);
@@ -195,6 +205,7 @@
   --color-brand-amber: var(--brand-amber);
   --color-brand-teal: var(--brand-teal);
   --color-brand-rose: var(--brand-rose);
+  --color-cta-gradient-end: var(--cta-gradient-end);
 
   --color-success-on-tint: var(--success-on-tint);
   --color-warning-on-tint: var(--warning-on-tint);

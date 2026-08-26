@@ -40,7 +40,10 @@ export function SiteFooter() {
                     <li key={item.label}>
                       <Link
                         href={item.href}
-                        className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                        // `inline-block` + padding so the tap target clears the
+                        // 24px WCAG 2.2 minimum. As bare inline text these were
+                        // 17px tall, which is a small thing to hit on a phone.
+                        className="text-muted-foreground hover:text-foreground inline-block py-1 text-sm transition-colors"
                       >
                         {item.label}
                       </Link>
