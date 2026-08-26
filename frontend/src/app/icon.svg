@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!--
+    Standalone copy of the mark for the favicon. Colours are hex rather than
+    CSS variables on purpose: this file is loaded outside the document, so it
+    has no access to the theme tokens.
+
+    Keep in sync with src/components/brand/logo.tsx.
+  -->
+  <defs>
+    <linearGradient id="g" x1="4" y1="3" x2="28" y2="29" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6d4aff"/>
+      <stop offset="0.55" stop-color="#9b7bff"/>
+      <stop offset="1" stop-color="#f0a24a"/>
+    </linearGradient>
+  </defs>
+  <path
+    d="M16 3.5c7.18 0 12.5 4.6 12.5 10.7 0 6.1-5.32 10.7-12.5 10.7-1.16 0-2.29-.1-3.36-.3l-5.3 3.16a.9.9 0 0 1-1.36-.86l.36-4.6C3.6 20.3 3.5 17.3 3.5 14.2 3.5 8.1 8.82 3.5 16 3.5Z"
+    fill="url(#g)"/>
+  <path
+    d="M13.6 10.6l6.5 3.2a.6.6 0 0 1 0 1.08l-6.5 3.2a.6.6 0 0 1-.87-.54v-6.4a.6.6 0 0 1 .87-.54Z"
+    fill="#fff" fill-opacity="0.95"/>
+</svg>

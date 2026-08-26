@@ -56,10 +56,15 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    apple: "/icon.svg",
-  },
+  /*
+   * Icons are deliberately not listed here.
+   *
+   * Setting `icons` explicitly stops Next merging the file conventions, which
+   * is how the apple-touch-icon link went missing: /apple-icon rendered fine
+   * but nothing in <head> pointed at it. `icon.svg`, `apple-icon.tsx` and
+   * `opengraph-image.tsx` all sit in this directory and are picked up on their
+   * own — moving icon.svg out of /public is what makes that work.
+   */
 };
 
 export const viewport: Viewport = {
