@@ -26,6 +26,10 @@ function TestimonialCard({ item }: { item: Testimonial }) {
 }
 
 export function Testimonials() {
+  // Nothing to show until real members have said something and agreed to it
+  // being published. Renders nothing rather than an empty section.
+  if (testimonials.length === 0) return null;
+
   const rowOne = testimonials.slice(0, 3);
   const rowTwo = testimonials.slice(3);
 

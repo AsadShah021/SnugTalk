@@ -6,8 +6,6 @@ import { PageHero } from "@/components/marketing/page-hero";
 import { Reveal } from "@/components/motion/reveal";
 import { Section } from "@/components/shared/section";
 import { Button } from "@/components/ui/button";
-import { listeners } from "@/lib/data/listeners";
-import { ListenerAvatar } from "@/components/brand/listener-avatar";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -42,15 +40,13 @@ const assurances = [
 ];
 
 export default function ChatPage() {
-  const online = listeners.slice(0, 3);
-
   return (
     <>
       <PageHero
         eyebrow={
           <>
             <span className="bg-success size-1.5 rounded-full" />
-            {online.length} listeners online now
+            Answered by a real person
           </>
         }
         title="Start talking. We're"
@@ -67,27 +63,19 @@ export default function ChatPage() {
             </Reveal>
 
             <div className="flex flex-col gap-4">
+              {/* This card used to name three invented listeners as being "on
+                  shift". Telling a visitor which specific people are waiting for
+                  them is a promise, and it wasn't one we could keep. Restore it
+                  when there's a real presence signal behind it. */}
               <Reveal delay={0.1}>
                 <div className="border-border/70 bg-card rounded-3xl border p-6">
                   <p className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-                    On shift right now
+                    Who answers you
                   </p>
-                  <div className="mt-5 flex flex-col gap-4">
-                    {online.map((listener) => (
-                      <div key={listener.id} className="flex items-center gap-3">
-                        <ListenerAvatar name={listener.name} src={listener.avatar} size="sm" online />
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium">{listener.name}</p>
-                          <p className="text-muted-foreground truncate text-xs">
-                            {listener.specialties[0]}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground border-border/60 mt-5 border-t pt-4 text-xs leading-relaxed">
+                  <p className="text-muted-foreground mt-4 text-sm leading-relaxed">
                     You don&rsquo;t choose who answers a chat — whoever is free picks
-                    it up. For a specific listener,{" "}
+                    it up, and you&rsquo;ll always see who replied. If you&rsquo;d
+                    rather talk to one particular person,{" "}
                     <Link href="/book" className="text-foreground underline underline-offset-2">
                       request a meeting
                     </Link>{" "}

@@ -10,13 +10,10 @@ import {
   Video,
 } from "lucide-react";
 
-import { ListenerAvatar } from "@/components/brand/listener-avatar";
 import { PageHeader } from "@/components/dashboard/app-shell";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { firstName, useAuth } from "@/lib/auth";
-import { listeners } from "@/lib/data/listeners";
 import { site } from "@/lib/data/site";
 import { cn } from "@/lib/utils";
 
@@ -50,7 +47,6 @@ const actions = [
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const onShift = listeners.slice(0, 3);
 
   return (
     <>
@@ -122,34 +118,19 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex flex-col gap-4">
+          {/* An "On shift now" card used to list three invented listeners here.
+              Showing a signed-in member fictional people they might then sit
+              waiting for is the worst kind of placeholder. Bring it back when a
+              real presence endpoint exists to drive it. */}
           <Card>
-            <CardHeader className="flex-row items-center justify-between">
-              <CardTitle>On shift now</CardTitle>
-              <Badge variant="success">
-                <span className="bg-success size-1.5 rounded-full" />
-                Online
-              </Badge>
+            <CardHeader>
+              <CardTitle>How replies work</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-              {onShift.map((listener) => (
-                <div key={listener.id} className="flex items-center gap-3">
-                  <ListenerAvatar
-                    name={listener.name}
-                    src={listener.avatar}
-                    size="sm"
-                    online
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{listener.name}</p>
-                    <p className="text-muted-foreground truncate text-xs">
-                      {listener.specialties[0]}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              <p className="text-muted-foreground border-border/60 border-t pt-4 text-xs leading-relaxed">
-                Whoever is free picks up your message. You&rsquo;ll always know
-                who you&rsquo;re talking to.
+            <CardContent>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Whoever is free picks up your message, and you&rsquo;ll always
+                see who replied. If you&rsquo;d rather talk to one particular
+                person, ask and we&rsquo;ll arrange it.
               </p>
             </CardContent>
           </Card>

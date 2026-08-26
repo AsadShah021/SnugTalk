@@ -107,26 +107,28 @@ export const requestableModes = sessionModes.filter(
  * `_pricing` and `_about`. To bring one back: drop the underscore from the
  * folder name and restore its entry below.
  */
-export const mainNav: NavItem[] = [
-  { label: "How it works", href: "/#how-it-works" },
-  { label: "FAQ", href: "/#faq" },
-];
+/**
+ * Header links. Deliberately empty: the landing page's only job is to get
+ * someone to Get started or Log in, and anchor links competing with those CTAs
+ * just gave people somewhere else to go. The sections still exist on the page
+ * and are still linked from the footer.
+ *
+ * Every render site guards on `length`, so adding entries here brings the nav
+ * back with no other changes.
+ */
+export const mainNav: NavItem[] = [];
 
 export const footerNav: { title: string; items: NavItem[] }[] = [
   {
-    title: "Get started",
+    title: "Product",
     items: [
-      { label: "Create an account", href: "/sign-up" },
-      { label: "Log in", href: "/sign-in" },
       { label: "How it works", href: "/#how-it-works" },
+      { label: "FAQ", href: "/#faq" },
     ],
   },
   {
     title: "Company",
-    items: [
-      { label: "FAQ", href: "/#faq" },
-      { label: "Contact", href: `mailto:${site.email}` },
-    ],
+    items: [{ label: "Contact", href: `mailto:${site.email}` }],
   },
   {
     title: "Resources",

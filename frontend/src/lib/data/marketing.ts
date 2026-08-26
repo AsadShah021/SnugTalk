@@ -1,57 +1,18 @@
-import { listeners } from "@/lib/data/listeners";
 import { site } from "@/lib/data/site";
 import type { Faq, Testimonial } from "@/types";
 
-export const testimonials: Testimonial[] = [
-  {
-    id: "t-1",
-    quote:
-      "I'd pitched the same idea to eight friends and they all said it was great. Forty minutes with a listener and I finally heard the part I'd been skipping over.",
-    name: "Dara Osei",
-    role: "Founder, logistics startup",
-    mode: "meet-video",
-  },
-  {
-    id: "t-2",
-    quote:
-      "It's not therapy and it doesn't pretend to be. It's a real person, once a week, who has time for the whole thought.",
-    name: "Marguerite Blanc",
-    role: "Design director",
-    mode: "voice",
-  },
-  {
-    id: "t-3",
-    quote:
-      "I moved countries alone last year. Having a standing Thursday call with someone who actually remembered what I said last week changed how that year went.",
-    name: "Nikolai Petrov",
-    role: "Software engineer",
-    mode: "meet-audio",
-  },
-  {
-    id: "t-4",
-    quote:
-      "I asked for a meeting on a Sunday night expecting to hear back Monday afternoon. Had a confirmed time in my calendar within the hour.",
-    name: "Aisha Rahman",
-    role: "CEO, health tech",
-    mode: "meet-video",
-  },
-  {
-    id: "t-5",
-    quote:
-      "Chat was the only way I was ever going to start. I typed for ten minutes, someone answered like a person, and six weeks later I asked for my first video call.",
-    name: "Tom Whitaker",
-    role: "PhD candidate",
-    mode: "text",
-  },
-  {
-    id: "t-6",
-    quote:
-      "The absence of advice is the point. Nobody tells me what to do. I leave knowing what I think.",
-    name: "Lena Fischer",
-    role: "Independent consultant",
-    mode: "voice",
-  },
-];
+/**
+ * EMPTY ON PURPOSE.
+ *
+ * Every quote here used to be invented, with invented names. Publishing a made-up
+ * review is deceptive advertising (FTC endorsement guides in the US, Australian
+ * Consumer Law s18 here) — and on a product whose entire promise is honesty
+ * about being heard, it is the worst possible thing to fake.
+ *
+ * Add entries only when a real member has said the words and agreed to them
+ * being published. The section hides itself while this is empty.
+ */
+export const testimonials: Testimonial[] = [];
 
 /*
  * Testing-phase FAQ. Questions about pricing, favourite listeners, feedback
@@ -98,26 +59,18 @@ export const faqs: Faq[] = [
 ];
 
 /**
- * Derived from the real team rather than invented, so the marketing numbers can
- * never contradict the team behind them.
+ * Deliberately not numbers.
+ *
+ * These used to be "9,600+ conversations held" and "4.9/5 average rating",
+ * both computed from a list of people who do not exist. Everything here now is
+ * a statement of how the service works, which is true on day one and does not
+ * quietly become a lie as the product changes.
  */
-const totalSessions = listeners.reduce((sum, l) => sum + l.sessions, 0);
-const totalReviews = listeners.reduce((sum, l) => sum + l.reviews, 0);
-const averageRating =
-  listeners.reduce((sum, l) => sum + l.rating * l.reviews, 0) / totalReviews;
-
-function roundDown(value: number, step: number) {
-  return Math.floor(value / step) * step;
-}
-
 export const trustStats = [
-  {
-    value: `${roundDown(totalSessions, 100).toLocaleString()}+`,
-    label: "Conversations held",
-  },
-  { value: `${listeners.length}`, label: "Listeners, all in-house" },
-  { value: `${averageRating.toFixed(1)}/5`, label: "Average session rating" },
+  { value: "Real people", label: "Never AI, never scripted" },
+  { value: "Private", label: "Encrypted, never recorded" },
   { value: site.requestResponseTime, label: "Typical reply to a request" },
+  { value: "Not therapy", label: "And we always say so" },
 ];
 
 export const trustPoints = [

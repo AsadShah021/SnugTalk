@@ -31,8 +31,8 @@ export function CtaSection() {
 
               <div className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                 <Button asChild size="xl" variant="gradient" className="w-full sm:w-auto">
-                  <Link href="/sign-up">
-                    Create your account <ArrowRight className="size-4" />
+                  <Link href="/sign-in">
+                    Get started <ArrowRight className="size-4" />
                   </Link>
                 </Button>
                 <Button asChild size="xl" variant="outline" className="w-full sm:w-auto">

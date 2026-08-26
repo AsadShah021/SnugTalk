@@ -151,12 +151,16 @@ export function AuthForm({ mode }: { mode: Mode }) {
     >
       <header className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold tracking-[-0.025em] sm:text-3xl">
-          {mode === "sign-in" && "Welcome back"}
+          {/* Neutral, because every "Get started" now lands here. Greeting a
+              first-time visitor with "Welcome back" tells them, wrongly, that
+              they're in the wrong place. */}
+          {mode === "sign-in" && "Welcome to SnugTalk"}
           {mode === "sign-up" && "Start your first conversation"}
           {mode === "forgot" && "Reset your password"}
         </h1>
         <p className="text-muted-foreground text-sm leading-relaxed">
-          {mode === "sign-in" && "Your listeners, sessions and notes are where you left them."}
+          {mode === "sign-in" &&
+            "Sign in to pick up where you left off — or create an account, it only takes a minute."}
           {mode === "sign-up" && "Create an account in under a minute. No card required to start chatting."}
           {mode === "forgot" && "Enter your email and we'll send you a link to set a new password."}
         </p>

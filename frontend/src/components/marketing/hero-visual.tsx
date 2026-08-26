@@ -2,10 +2,8 @@
 
 import * as React from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { CalendarClock, Check, Video } from "lucide-react";
+import { CalendarClock, Check, Ear, Video } from "lucide-react";
 
-import { ListenerAvatar } from "@/components/brand/listener-avatar";
-import { getListenerBySlug } from "@/lib/data/listeners";
 import { ModeBadge } from "@/components/shared/mode-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,8 +35,13 @@ const chatBeats = [
   { author: "listener" as const, text: "Say it out loud and let's see how it sounds." },
 ];
 
+/*
+ * An illustration of the product, not a claim about it. It used to put a named
+ * face — "Amara Okonkwo" — in the seat, alongside a second invented name in the
+ * schedule and two made-up figures on the floating chips. A mock-up may show how
+ * the interface is laid out; it may not introduce people who don't exist.
+ */
 export function HeroVisual() {
-  const amara = getListenerBySlug("amara-okonkwo")!;
   const rotateXRaw = useMotionValue(0);
   const rotateYRaw = useMotionValue(0);
   const rotateX = useSpring(rotateXRaw, { stiffness: 180, damping: 24 });
@@ -106,11 +109,19 @@ export function HeroVisual() {
             {/* Live session panel */}
             <div className="border-border/60 flex flex-col gap-5 p-5 sm:border-r sm:p-6">
               <div className="flex items-start gap-3.5">
-                <ListenerAvatar name={amara.name} src={amara.avatar} size="lg" online />
+                <span
+                  aria-hidden
+                  className="from-[var(--brand-violet)] to-[var(--brand-teal)] relative grid size-14 shrink-0 place-items-center rounded-full bg-linear-to-br text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]"
+                >
+                  <Ear className="size-6" />
+                  <span className="absolute right-0 bottom-0 flex size-3">
+                    <span className="bg-success ring-background inline-flex size-3 rounded-full ring-2" />
+                  </span>
+                </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold">Amara Okonkwo</p>
+                  <p className="truncate text-sm font-semibold">Your listener</p>
                   <p className="text-muted-foreground truncate text-xs">
-                    Listener · Idea validation
+                    A real person, connected
                   </p>
                 </div>
                 <ModeBadge mode="meet-video" />
@@ -149,7 +160,7 @@ export function HeroVisual() {
                 <div className="min-w-0">
                   <p className="truncate text-xs font-medium">Thursday, 9:00 AM</p>
                   <p className="text-muted-foreground truncate text-[0.6875rem]">
-                    Mei Lin · Google Meet
+                    Google Meet · link emailed
                   </p>
                 </div>
                 <Button size="icon-sm" variant="subtle" className="ml-auto" tabIndex={-1}>
@@ -189,7 +200,7 @@ export function HeroVisual() {
                     />
                   ))}
                 </span>
-                Amara is typing
+                Someone is typing
               </div>
             </div>
           </div>
@@ -203,8 +214,9 @@ export function HeroVisual() {
         transition={{ duration: 0.8, ease: easeOutExpo, delay: 0.9 }}
         className="glass animate-float absolute -bottom-6 -left-3 hidden rounded-2xl px-4 py-3 sm:block lg:-left-10"
       >
-        <p className="text-muted-foreground text-[0.6875rem]">Average session</p>
-        <p className="text-lg font-semibold tracking-tight">42 minutes</p>
+        {/* Was "Average session — 42 minutes", an average of no sessions. */}
+        <p className="text-muted-foreground text-[0.6875rem]">Every session</p>
+        <p className="text-lg font-semibold tracking-tight">Never recorded</p>
       </motion.div>
 
       <motion.div
@@ -219,8 +231,8 @@ export function HeroVisual() {
             <Check className="size-4" />
           </span>
           <div>
-            <p className="text-xs font-semibold">Chat answered in minutes</p>
-            <p className="text-muted-foreground text-[0.6875rem]">3 listeners on shift now</p>
+            <p className="text-xs font-semibold">Answered by a person</p>
+            <p className="text-muted-foreground text-[0.6875rem]">Never a bot, never a script</p>
           </div>
         </div>
       </motion.div>

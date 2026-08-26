@@ -73,8 +73,11 @@ export function SiteHeader() {
 
           {/* Desktop navigation — the Services mega-menu is parked with the
               /services route; restore both together. */}
-          <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
-            {mainNav.map((item) => (
+          {/* Guarded on length: an empty <nav> is still a landmark, and screen
+              readers announce a navigation region with nothing in it. */}
+          {mainNav.length > 0 && (
+            <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+              {mainNav.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -86,7 +89,8 @@ export function SiteHeader() {
                   {item.label}
                 </Link>
               ))}
-          </nav>
+            </nav>
+          )}
 
           <div className="flex items-center gap-1.5">
             <ThemeToggle className="hidden sm:inline-flex" />
@@ -99,16 +103,13 @@ export function SiteHeader() {
                 </Link>
               </Button>
             ) : (
-              <>
-                <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-                  <Link href="/sign-in">Log in</Link>
-                </Button>
-                <Button asChild variant="gradient" size="sm" className="hidden sm:inline-flex">
-                  <Link href="/sign-up">
-                    Get started <ArrowRight className="size-3.5" />
-                  </Link>
-                </Button>
-              </>
+              // One button: "Log in" pointed at the same page, and the
+              // sign-in screen already serves returning and new visitors alike.
+              <Button asChild variant="gradient" size="sm" className="hidden sm:inline-flex">
+                <Link href="/sign-in">
+                  Get started <ArrowRight className="size-3.5" />
+                </Link>
+              </Button>
             )}
 
             {/* Mobile */}
@@ -123,20 +124,22 @@ export function SiteHeader() {
                 <div className="flex flex-col gap-6 p-6 pt-7">
                   <Logo />
 
-                  <nav className="flex flex-col gap-1" aria-label="Mobile">
-                    {mainNav.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={cn(
-                          "hover:bg-accent rounded-xl px-3 py-3 text-[0.95rem] font-medium transition-colors",
-                          isActive(item.href) && "text-primary bg-accent/60",
-                        )}
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </nav>
+                  {mainNav.length > 0 && (
+                    <nav className="flex flex-col gap-1" aria-label="Mobile">
+                      {mainNav.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={cn(
+                            "hover:bg-accent rounded-xl px-3 py-3 text-[0.95rem] font-medium transition-colors",
+                            isActive(item.href) && "text-primary bg-accent/60",
+                          )}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </nav>
+                  )}
 
                   <Separator />
 
@@ -148,16 +151,11 @@ export function SiteHeader() {
                         </Link>
                       </Button>
                     ) : (
-                      <>
-                        <Button asChild variant="gradient" size="lg">
-                          <Link href="/sign-up">
-                            Get started <ArrowRight className="size-4" />
-                          </Link>
-                        </Button>
-                        <Button asChild variant="outline" size="lg">
-                          <Link href="/sign-in">Log in</Link>
-                        </Button>
-                      </>
+                      <Button asChild variant="gradient" size="lg">
+                        <Link href="/sign-in">
+                          Get started <ArrowRight className="size-4" />
+                        </Link>
+                      </Button>
                     )}
                   </div>
 

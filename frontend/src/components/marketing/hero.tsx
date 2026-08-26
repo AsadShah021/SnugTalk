@@ -1,13 +1,10 @@
 import Link from "next/link";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 
-import { ListenerAvatar } from "@/components/brand/listener-avatar";
 import { HeroVisual } from "@/components/marketing/hero-visual";
 import { AuroraBackdrop } from "@/components/motion/aurora-backdrop";
 import { Reveal, Stagger, RevealItem } from "@/components/motion/reveal";
-import { Rating } from "@/components/shared/rating";
 import { Button } from "@/components/ui/button";
-import { featuredListeners } from "@/lib/data/listeners";
 import { trustPoints } from "@/lib/data/marketing";
 
 export function Hero() {
@@ -23,7 +20,7 @@ export function Hero() {
         <Stagger className="mx-auto flex max-w-3xl flex-col items-center text-center">
           <RevealItem>
             <Link
-              href="/sign-up"
+              href="/sign-in"
               className="glass group mb-8 inline-flex items-center gap-2.5 rounded-full py-1.5 pr-4 pl-1.5 text-xs font-medium"
             >
               <span className="bg-primary text-primary-foreground inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.6875rem]">
@@ -58,7 +55,7 @@ export function Hero() {
 
           <RevealItem className="mt-9 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
             <Button asChild size="xl" variant="gradient" className="w-full sm:w-auto">
-              <Link href="/sign-up">
+              <Link href="/sign-in">
                 Get started
                 <ArrowRight className="size-4" />
               </Link>
@@ -68,27 +65,11 @@ export function Hero() {
             </Button>
           </RevealItem>
 
+          {/* The avatar row and the "4.9" rating that used to sit here were both
+              fabricated — invented faces, and a score averaged over sessions
+              that never happened. What remains describes how the service works,
+              which is true on day one. */}
           <RevealItem className="mt-9 flex flex-col items-center gap-5 sm:flex-row sm:gap-7">
-            <div className="flex items-center gap-3">
-              <div className="flex -space-x-2.5">
-                {featuredListeners.slice(0, 4).map((listener) => (
-                  <ListenerAvatar
-                    key={listener.id}
-                    name={listener.name}
-                    src={listener.avatar}
-                    size="sm"
-                    ring
-                  />
-                ))}
-              </div>
-              <div className="text-left">
-                <Rating value={4.9} />
-                <p className="text-muted-foreground text-xs">
-                  our whole team, all in-house
-                </p>
-              </div>
-            </div>
-
             <ul className="text-muted-foreground flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
               {trustPoints.slice(0, 3).map((point) => (
                 <li key={point} className="flex items-center gap-1.5">

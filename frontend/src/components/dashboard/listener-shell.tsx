@@ -2,22 +2,27 @@
 
 import Link from "next/link";
 import {
-  CalendarClock,
   CalendarRange,
-  History,
   Inbox,
   LayoutDashboard,
   MessagesSquare,
-  NotebookPen,
-  Star,
   UserRoundCheck,
-  Wallet,
 } from "lucide-react";
 
 import { AppShell } from "@/components/dashboard/app-shell";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { useAuth } from "@/lib/auth";
 
+/*
+ * Only the pages with real data behind them.
+ *
+ * Appointments, client notes, earnings, ratings & reviews and session history
+ * are parked as `page.full.tsx` under app/listener — every one of them rendered
+ * `lib/data/demo`, so a listener saw invented clients, invented money and
+ * invented five-star reviews from members who don't exist. Restore each link
+ * alongside its page when the endpoint behind it exists. See TESTING-SCOPE.md.
+ */
 const sections = [
   {
     title: "Needs you",
@@ -29,30 +34,25 @@ const sections = [
     ],
   },
   {
-    title: "Scheduled",
-    items: [
-      { label: "Appointments", href: "/listener/appointments", icon: CalendarClock, badge: 4 },
-      { label: "Client notes", href: "/listener/clients", icon: NotebookPen },
-      { label: "Availability", href: "/listener/availability", icon: CalendarRange },
-    ],
-  },
-  {
     title: "Your practice",
     items: [
-      { label: "Earnings", href: "/listener/earnings", icon: Wallet },
-      { label: "Ratings & reviews", href: "/listener/reviews", icon: Star },
-      { label: "Session history", href: "/listener/history", icon: History },
+      { label: "Availability", href: "/listener/availability", icon: CalendarRange },
     ],
   },
 ];
 
 export function ListenerShell({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+
   return (
     <AppShell
       sections={sections}
+      // The real signed-in user. This was hardcoded to "Amara Okonkwo · Senior
+      // listener · 6 yrs" — a fictional person, shown to whichever actual
+      // member of the team was logged in.
       user={{
-        name: "Amara Okonkwo",
-        caption: "Senior listener · 6 yrs",
+        name: user?.name ?? "Your account",
+        caption: user?.email ?? "Signed in",
         href: "/listener/availability",
       }}
       searchPlaceholder="Search chats, requests, clients and notes…"

@@ -74,31 +74,13 @@ export function SiteFooter() {
           <p className="text-muted-foreground text-xs">
             © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <Link
-              href="/privacy"
-              className="text-muted-foreground hover:text-foreground text-xs transition-colors"
-            >
-              Privacy
+          {/* Privacy, Terms and Safety all live in the Resources column above.
+              Repeating them here meant four duplicate links in one footer. */}
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/sign-in">
+              Get started <ArrowRight className="size-3.5" />
             </Link>
-            <Link
-              href="/terms"
-              className="text-muted-foreground hover:text-foreground text-xs transition-colors"
-            >
-              Terms
-            </Link>
-            <Link
-              href="/#safety"
-              className="text-muted-foreground hover:text-foreground text-xs transition-colors"
-            >
-              Safety
-            </Link>
-            <Button asChild variant="ghost" size="sm">
-              <Link href="/sign-up">
-                Get started <ArrowRight className="size-3.5" />
-              </Link>
-            </Button>
-          </div>
+          </Button>
         </div>
       </div>
     </footer>

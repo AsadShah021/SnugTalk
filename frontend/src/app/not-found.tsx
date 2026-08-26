@@ -43,17 +43,19 @@ export default function NotFound() {
           </Button>
         </div>
 
-        <nav className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-3" aria-label="Site">
-          {mainNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-muted-foreground hover:text-foreground text-sm transition-colors"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        {mainNav.length > 0 && (
+          <nav className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-3" aria-label="Site">
+            {mainNav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        )}
       </main>
     </div>
   );
