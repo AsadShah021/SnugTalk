@@ -2,6 +2,7 @@ import Link from "next/link";
 import { CalendarClock, Clock3, Lock, MessageSquareText, Users } from "lucide-react";
 
 import { ChatPanel } from "@/components/chat/chat-panel";
+import { MemberOnly } from "@/components/dashboard/member-only";
 import { PageHero } from "@/components/marketing/page-hero";
 import { Reveal } from "@/components/motion/reveal";
 import { Section } from "@/components/shared/section";
@@ -41,7 +42,7 @@ const assurances = [
 
 export default function ChatPage() {
   return (
-    <>
+    <MemberOnly>
       <PageHero
         eyebrow={
           <>
@@ -123,6 +124,6 @@ export default function ChatPage() {
           </div>
         </div>
       </Section>
-    </>
+    </MemberOnly>
   );
 }

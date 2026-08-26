@@ -1,3 +1,4 @@
+import { MemberOnly } from "@/components/dashboard/member-only";
 import { MemberShell } from "@/components/dashboard/member-shell";
 import { createMetadata } from "@/lib/seo";
 
@@ -11,5 +12,9 @@ export const metadata = createMetadata({
 export default function DashboardLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return <MemberShell>{children}</MemberShell>;
+  return (
+    <MemberOnly>
+      <MemberShell>{children}</MemberShell>
+    </MemberOnly>
+  );
 }

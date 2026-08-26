@@ -1,4 +1,5 @@
 import { MeetingRequestForm } from "@/components/booking/meeting-request-form";
+import { MemberOnly } from "@/components/dashboard/member-only";
 import { PageHero } from "@/components/marketing/page-hero";
 import { Section } from "@/components/shared/section";
 import { site } from "@/lib/data/site";
@@ -13,7 +14,7 @@ export const metadata = createMetadata({
 
 export default function BookPage() {
   return (
-    <>
+    <MemberOnly>
       <PageHero
         eyebrow={`A person replies within ${site.requestResponseTime}`}
         title="Tell us what's on your mind and"
@@ -27,6 +28,6 @@ export default function BookPage() {
           <MeetingRequestForm />
         </div>
       </Section>
-    </>
+    </MemberOnly>
   );
 }

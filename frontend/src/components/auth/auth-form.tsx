@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { API_BASE, ApiError } from "@/lib/api";
-import { useAuth } from "@/lib/auth";
+import { isStaff, landingFor, useAuth } from "@/lib/auth";
 import { easeOutExpo } from "@/lib/motion";
 
 /** Inline provider marks — no external requests, and they theme correctly. */
@@ -45,8 +45,11 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { signIn, signUp } = useAuth();
-  // Where middleware wanted them to land before it bounced them here.
-  const next = searchParams.get("next") || "/dashboard";
+  // Where middleware wanted them to land before it bounced them here. Kept raw
+  // so we can tell "no destination asked for" from "asked for /dashboard" —
+  // only the former gets sent to a role's own home below.
+  const requestedNext = searchParams.get("next");
+  const next = requestedNext || "/dashboard";
   const oauthError = searchParams.get("error");
 
   // The Google callback redirects back with ?error=... when something failed.
@@ -115,10 +118,19 @@ export function AuthForm({ mode }: { mode: Mode }) {
       return;
     }
 
+    // Staff have no use for the member dashboard — it exists to message the
+    // team and request a meeting, which is work they receive rather than file.
+    // An explicit `next` still wins, so a deep link they were bounced off
+    // still takes them where they were going.
+    const destination = requestedNext || landingFor(user);
+    const staff = isStaff(user);
+
     toast.success(mode === "sign-up" ? "Welcome to SnugTalk" : "Welcome back", {
-      description: "You can message us or schedule a meeting from your dashboard.",
+      description: staff
+        ? "Your queues are waiting."
+        : "You can message us or schedule a meeting from your dashboard.",
     });
-    router.push(next);
+    router.push(destination);
     router.refresh();
   }
 

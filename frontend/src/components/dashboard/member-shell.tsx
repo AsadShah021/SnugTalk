@@ -5,13 +5,12 @@ import {
   LayoutDashboard,
   MessagesSquare,
   Settings,
-  ShieldCheck,
   UserRoundCheck,
 } from "lucide-react";
 
 import { ChatWidget } from "@/components/chat/chat-widget";
 import { AppShell } from "@/components/dashboard/app-shell";
-import { isStaff, useAuth } from "@/lib/auth";
+import { useAuth } from "@/lib/auth";
 
 /*
  * Testing-phase member navigation: the two things an account can actually do,
@@ -34,27 +33,18 @@ const sections = [
   },
 ];
 
+/*
+ * Members only. `MemberOnly` in the layout above sends staff to their own
+ * panel before this renders, so the "Staff" section that used to be appended
+ * here — a cross-link to /admin or /listener — no longer has anyone to show
+ * it to. Staff sign in straight into their own dashboard instead.
+ */
 export function MemberShell({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
 
-  // Staff get a link across to the tools their role unlocks.
-  const navigation = isStaff(user)
-    ? [
-        ...sections,
-        {
-          title: "Staff",
-          items: [
-            user?.role === "ADMIN"
-              ? { label: "Admin panel", href: "/admin", icon: ShieldCheck }
-              : { label: "Team dashboard", href: "/listener", icon: ShieldCheck },
-          ],
-        },
-      ]
-    : sections;
-
   return (
     <AppShell
-      sections={navigation}
+      sections={sections}
       user={{
         name: user?.name ?? "Your account",
         caption: user?.email ?? "Signed in",

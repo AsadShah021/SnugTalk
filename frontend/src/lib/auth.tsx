@@ -174,6 +174,23 @@ export function isStaff(user: SessionUser | null) {
   return user?.role === "LISTENER" || user?.role === "ADMIN";
 }
 
+/**
+ * Where this account belongs after signing in, and where a guard sends someone
+ * who has wandered onto the wrong side of the app. A member's home is the only
+ * one that offers "message us" and "request a meeting" — staff answer those,
+ * they don't file them.
+ */
+export function landingFor(user: SessionUser | null) {
+  if (user?.role === "ADMIN") return "/admin";
+  if (user?.role === "LISTENER") return "/listener";
+  return "/dashboard";
+}
+
+/** `landingFor` narrowed to staff, for the member-side guards. */
+export function staffHome(user: SessionUser | null) {
+  return user?.role === "ADMIN" ? "/admin" : "/listener";
+}
+
 /** Signed in but still owing us a code — nothing gated will work yet. */
 export function needsVerification(user: SessionUser | null) {
   return Boolean(user && !user.isVerified);

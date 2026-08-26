@@ -2,13 +2,14 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Bell, Menu, Plus, Search } from "lucide-react";
+import { Menu, Plus, Search } from "lucide-react";
 
 import {
   AppSidebar,
   type SidebarSection,
 } from "@/components/dashboard/app-sidebar";
 import { ImpersonationBanner } from "@/components/dashboard/impersonation-banner";
+import { NotificationBell } from "@/components/dashboard/notification-bell";
 import { ThemeToggle } from "@/components/brand/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -86,10 +87,7 @@ export function AppShell({
           </div>
 
           <div className="ml-auto flex items-center gap-1.5">
-            <Button variant="ghost" size="icon" aria-label="Notifications" className="relative">
-              <Bell className="size-4.5" />
-              <span className="bg-destructive ring-background absolute top-2 right-2 size-2 rounded-full ring-2" />
-            </Button>
+            <NotificationBell />
             <ThemeToggle />
             {primaryAction && (
               <Button asChild variant="gradient" size="sm" className="ml-1.5">

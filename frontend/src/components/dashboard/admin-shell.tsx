@@ -13,7 +13,7 @@ import {
 
 import { AppShell } from "@/components/dashboard/app-shell";
 import { api, type AdminStats } from "@/lib/api";
-import { useAuth } from "@/lib/auth";
+import { landingFor, useAuth } from "@/lib/auth";
 
 /** Refresh the sidebar badges often enough that new work is noticed. */
 const POLL_MS = 15000;
@@ -33,8 +33,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const isAdmin = user?.role === "ADMIN";
 
   React.useEffect(() => {
-    if (ready && !isAdmin) router.replace("/dashboard");
-  }, [ready, isAdmin, router]);
+    // Send them to their own home rather than always to /dashboard: a listener
+    // bounced here would otherwise land on the member dashboard and be bounced
+    // straight back out of it by `MemberOnly`.
+    if (ready && !isAdmin) router.replace(landingFor(user));
+  }, [ready, isAdmin, user, router]);
 
   React.useEffect(() => {
     if (!isAdmin) return;
