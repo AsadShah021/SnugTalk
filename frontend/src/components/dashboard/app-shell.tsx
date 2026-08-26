@@ -100,9 +100,21 @@ export function AppShell({
           </div>
         </header>
 
+        {/*
+         * A plain block, deliberately — not a flex column.
+         *
+         * As a flex column this clipped long pages: flex items shrink by
+         * default, so a tall table shrank to the leftover height instead of
+         * overflowing, nothing exceeded `main`, and no scrollbar ever appeared.
+         * The admin user list simply stopped mid-row.
+         *
+         * Pages that want to fill the viewport and scroll internally (the chat
+         * inboxes) opt in with `FullHeight` below, rather than every ordinary
+         * page having to defend itself with `shrink-0`.
+         */}
         <main
           id="main"
-          className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 lg:py-8"
+          className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 lg:py-8"
         >
           {children}
         </main>
@@ -110,6 +122,17 @@ export function AppShell({
       </div>
     </div>
   );
+}
+
+/**
+ * Opt-in full-height page body, for screens that should fill the viewport and
+ * scroll inside themselves instead of scrolling the page — the chat inboxes.
+ *
+ * `main` has a definite height, so `h-full` here resolves against it; the page
+ * header stays `shrink-0` and whatever follows can take `min-h-0 flex-1`.
+ */
+export function FullHeight({ children }: { children: React.ReactNode }) {
+  return <div className="flex h-full min-h-0 flex-col">{children}</div>;
 }
 
 /** Page title block used at the top of every dashboard route. */

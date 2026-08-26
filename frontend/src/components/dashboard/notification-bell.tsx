@@ -186,9 +186,11 @@ export function NotificationBell() {
           <div className="px-4 py-8 text-center">
             <p className="text-sm font-medium">You&rsquo;re all caught up</p>
             <p className="text-muted-foreground mt-1 text-xs leading-relaxed">
+              {/* A literal character, not `&rsquo;` — this is a JS string, and
+                  entities are only decoded in JSX text. */}
               {staff
                 ? "No chats waiting and no requests without a time."
-                : "We&rsquo;ll let you know here when someone replies."}
+                : "We’ll let you know here when someone replies."}
             </p>
           </div>
         ) : (
