@@ -18,9 +18,15 @@ datasource db {
   provider = "mysql"
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                   Users                                    */
-/* -------------------------------------------------------------------------- */
+/**
+ * --------------------------------------------------------------------------
+ */
+/**
+ * Users
+ */
+/**
+ * --------------------------------------------------------------------------
+ */
 
 enum Role {
   MEMBER
@@ -29,32 +35,42 @@ enum Role {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  name         String   @db.VarChar(120)
+  id           String  @id @default(cuid())
+  name         String  @db.VarChar(120)
   // 191 chars, not 255: a utf8mb4 index key is 4 bytes per char, and older
   // MySQL/InnoDB caps index keys at 767 bytes. 191 is always safe.
-  email        String   @unique @db.VarChar(191)
-  passwordHash String   @db.VarChar(255)
-  role         Role     @default(MEMBER)
+  email        String  @unique @db.VarChar(191)
+  passwordHash String  @db.VarChar(255)
+  role         Role    @default(MEMBER)
   /// 0 until they enter the emailed code, 1 once they have. Google sign-ups
   /// arrive as 1 — Google has already proven the address, so asking again is
   /// friction with no security gain.
   ///
   /// MySQL stores this as TINYINT(1), so it reads as a plain 0/1 in any
   /// database client.
-  isVerified Boolean @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  isVerified   Boolean @default(false)
+
+  /// Set by an admin to stop somebody using the service. Blocked accounts keep
+  /// all their data — this is a door being closed, not a deletion — but they
+  /// cannot sign in, and any session they already hold stops working on the
+  /// next request.
+  isBlocked Boolean   @default(false)
+  /// When the block was applied, so support can tell a recent action from an
+  /// old one when somebody writes in to appeal.
+  blockedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   listenerProfile       ListenerProfile?
-  requests              MeetingRequest[] @relation("Requester")
-  assignedRequests      MeetingRequest[] @relation("AssignedListener")
-  conversations         Conversation[]   @relation("Member")
-  assignedConversations Conversation[]   @relation("ConversationListener")
+  requests              MeetingRequest[]    @relation("Requester")
+  assignedRequests      MeetingRequest[]    @relation("AssignedListener")
+  conversations         Conversation[]      @relation("Member")
+  assignedConversations Conversation[]      @relation("ConversationListener")
   messages              Message[]
-  sentConnections     ConnectionRequest[] @relation("MemberConnections")
-  receivedConnections ConnectionRequest[] @relation("ListenerConnections")
-  emailOtps           EmailOtp[]
+  sentConnections       ConnectionRequest[] @relation("MemberConnections")
+  receivedConnections   ConnectionRequest[] @relation("ListenerConnections")
+  emailOtps             EmailOtp[]
 
   @@map("users")
 }
@@ -66,7 +82,6 @@ enum OtpPurpose {
 
 /**
  * A one-time code sent to an email address.
- *
  * Only a hash of the code is stored. A six-digit code is worth very little on
  * its own, but a database dump should never hand somebody a set of live codes
  * they can type straight into the login form.
@@ -95,15 +110,15 @@ model EmailOtp {
 
 /// One-to-one extension of User for role = LISTENER.
 model ListenerProfile {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  slug      String   @unique @db.VarChar(120)
-  headline  String   @db.VarChar(200)
-  bio       String   @db.Text
-  avatarUrl String?  @db.VarChar(500)
-  location  String?  @db.VarChar(120)
-  timezone  String   @db.VarChar(60)
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug        String   @unique @db.VarChar(120)
+  headline    String   @db.VarChar(200)
+  bio         String   @db.Text
+  avatarUrl   String?  @db.VarChar(500)
+  location    String?  @db.VarChar(120)
+  timezone    String   @db.VarChar(60)
   // JSON is fine while the public directory is parked. If you bring back
   // filtering by specialty, promote these to their own tables so they can be
   // indexed — you cannot efficiently query inside a JSON column.
@@ -116,9 +131,15 @@ model ListenerProfile {
   @@map("listener_profiles")
 }
 
-/* -------------------------------------------------------------------------- */
-/*                              Meeting requests                              */
-/* -------------------------------------------------------------------------- */
+/**
+ * --------------------------------------------------------------------------
+ */
+/**
+ * Meeting requests
+ */
+/**
+ * --------------------------------------------------------------------------
+ */
 
 enum RequestStatus {
   NEW
@@ -160,9 +181,15 @@ model MeetingRequest {
   @@map("meeting_requests")
 }
 
-/* -------------------------------------------------------------------------- */
-/*                            Connection requests                             */
-/* -------------------------------------------------------------------------- */
+/**
+ * --------------------------------------------------------------------------
+ */
+/**
+ * Connection requests
+ */
+/**
+ * --------------------------------------------------------------------------
+ */
 
 enum ConnectionStatus {
   PENDING
@@ -172,7 +199,6 @@ enum ConnectionStatus {
 
 /**
  * A member asking a specific listener to be theirs.
- *
  * Accepting assigns that listener to the member's conversation, so replies come
  * from a known person rather than whoever is free. Declining is deliberately a
  * first-class outcome: a listener who is at capacity, or who isn't the right
@@ -187,9 +213,9 @@ model ConnectionRequest {
   listenerId String
   listener   User   @relation("ListenerConnections", fields: [listenerId], references: [id], onDelete: Cascade)
 
-  status ConnectionStatus @default(PENDING)
+  status      ConnectionStatus @default(PENDING)
   /// Optional note from the member — why this listener, what they'd like to talk about.
-  message     String?   @db.Text
+  message     String?          @db.Text
   respondedAt DateTime?
 
   createdAt DateTime @default(now())
@@ -202,9 +228,15 @@ model ConnectionRequest {
   @@map("connection_requests")
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                    Chat                                    */
-/* -------------------------------------------------------------------------- */
+/**
+ * --------------------------------------------------------------------------
+ */
+/**
+ * Chat
+ */
+/**
+ * --------------------------------------------------------------------------
+ */
 
 enum ConversationStatus {
   WAITING
@@ -220,11 +252,11 @@ model Conversation {
   assignedListenerId String?
   assignedListener   User?   @relation("ConversationListener", fields: [assignedListenerId], references: [id], onDelete: SetNull)
 
-  status ConversationStatus @default(WAITING)
+  status        ConversationStatus @default(WAITING)
   /// Denormalised so the inbox can sort without touching the messages table.
-  lastMessageAt DateTime @default(now())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  lastMessageAt DateTime           @default(now())
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
 
   messages Message[]
 
@@ -249,9 +281,15 @@ model Message {
   @@map("messages")
 }
 
-/* -------------------------------------------------------------------------- */
-/*                            Parked — add later                              */
-/* -------------------------------------------------------------------------- */
+/**
+ * --------------------------------------------------------------------------
+ */
+/**
+ * Parked — add later
+ */
+/**
+ * --------------------------------------------------------------------------
+ */
 //
 // services            slug, title, summary, description, group, flags
 // plans               name, price_monthly, price_yearly, sessions_per_month

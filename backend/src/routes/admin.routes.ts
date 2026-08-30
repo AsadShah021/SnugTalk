@@ -18,6 +18,8 @@ const publicUser = {
   email: true,
   role: true,
   isVerified: true,
+  isBlocked: true,
+  blockedAt: true,
   createdAt: true,
   updatedAt: true,
 } as const;
@@ -108,15 +110,17 @@ adminRoutes.get("/attention", async (_req, res) => {
 const listQuery = z.object({
   q: z.string().trim().max(191).optional(),
   role: z.enum(["MEMBER", "LISTENER", "ADMIN"]).optional(),
+  blocked: z.enum(["true", "false"]).optional(),
   page: z.coerce.number().int().min(1).default(1),
   perPage: z.coerce.number().int().min(1).max(100).default(20),
 });
 
 adminRoutes.get("/users", async (req, res) => {
-  const { q, role, page, perPage } = listQuery.parse(req.query);
+  const { q, role, blocked, page, perPage } = listQuery.parse(req.query);
 
   const where = {
     ...(role ? { role } : {}),
+    ...(blocked ? { isBlocked: blocked === "true" } : {}),
     ...(q ? { OR: [{ name: { contains: q } }, { email: { contains: q } }] } : {}),
   };
 
@@ -188,12 +192,13 @@ const updateUser = z
     name: z.string().trim().min(1, "Name can't be empty").max(120).optional(),
     email: z.string().trim().toLowerCase().email("Enter a valid email").max(191).optional(),
     role: z.enum(["MEMBER", "LISTENER", "ADMIN"]).optional(),
+    isBlocked: z.boolean().optional(),
   })
   .refine((v) => Object.keys(v).length > 0, { message: "Nothing to update" });
 
 adminRoutes.patch("/users/:id", async (req, res) => {
   const { id } = idParam.parse(req.params);
-  const { name, email, role } = updateUser.parse(req.body);
+  const { name, email, role, isBlocked } = updateUser.parse(req.body);
 
   const target = await prisma.user.findUnique({ where: { id } });
   if (!target) throw ApiError.notFound("No such user");
@@ -209,6 +214,24 @@ adminRoutes.patch("/users/:id", async (req, res) => {
     }
   }
 
+  if (isBlocked !== undefined) {
+    // Blocking yourself would end your own session on the very next request,
+    // and there would be no way back in through the panel you just lost.
+    if (target.id === req.user!.id) {
+      throw ApiError.badRequest("You can't block your own account");
+    }
+    // The same reasoning as demoting the last admin: leave at least one person
+    // who can still get in and undo it.
+    if (isBlocked && target.role === "ADMIN") {
+      const activeAdmins = await prisma.user.count({
+        where: { role: "ADMIN", isBlocked: false },
+      });
+      if (activeAdmins <= 1) {
+        throw ApiError.badRequest("There must always be at least one admin who isn't blocked");
+      }
+    }
+  }
+
   if (email && email !== target.email) {
     const clash = await prisma.user.findUnique({ where: { email } });
     if (clash) throw ApiError.conflict("Another account already uses that email");
@@ -216,7 +239,15 @@ adminRoutes.patch("/users/:id", async (req, res) => {
 
   const user = await prisma.user.update({
     where: { id },
-    data: { ...(name ? { name } : {}), ...(email ? { email } : {}), ...(role ? { role } : {}) },
+    data: {
+      ...(name ? { name } : {}),
+      ...(email ? { email } : {}),
+      ...(role ? { role } : {}),
+      // blockedAt tracks the flag so support can see how recent a block is.
+      ...(isBlocked === undefined
+        ? {}
+        : { isBlocked, blockedAt: isBlocked ? new Date() : null }),
+    },
     select: publicUser,
   });
 
@@ -380,6 +411,11 @@ adminRoutes.post("/users/:id/impersonate", async (req, res) => {
   if (!target) throw ApiError.notFound("No such user");
   if (target.role === "ADMIN") {
     throw ApiError.forbidden("Admins can't impersonate other admins");
+  }
+  // requireAuth would reject the very next request anyway, which would look
+  // like a broken panel rather than a deliberate refusal.
+  if (target.isBlocked) {
+    throw ApiError.badRequest("That account is blocked — unblock it first");
   }
 
   console.warn(

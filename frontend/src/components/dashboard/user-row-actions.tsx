@@ -3,7 +3,15 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, MailCheck, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import {
+  Ban,
+  CircleCheck,
+  Eye,
+  MailCheck,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
@@ -38,10 +46,12 @@ export function UserRowActions({
   const [confirmDelete, setConfirmDelete] = React.useState(false);
   const [confirmImpersonate, setConfirmImpersonate] = React.useState(false);
   const [confirmVerify, setConfirmVerify] = React.useState(false);
+  const [confirmBlock, setConfirmBlock] = React.useState(false);
 
   const isSelf = me?.id === user.id;
   const isAdmin = user.role === "ADMIN";
   const unverified = !user.isVerified;
+  const blocked = Boolean(user.isBlocked);
 
   async function markVerified() {
     try {
@@ -52,6 +62,26 @@ export function UserRowActions({
       toast.success(`${user.name} can now sign in`);
     } catch (error) {
       toast.error(error instanceof ApiError ? error.message : "Couldn't verify that.");
+      throw error;
+    }
+  }
+
+  async function setBlocked(next: boolean) {
+    try {
+      const { user: updated } = await api.patch<{ user: AdminUserRow }>(
+        `/api/admin/users/${user.id}`,
+        { isBlocked: next },
+      );
+      onUpdated?.({ ...user, ...updated });
+      toast.success(
+        next
+          ? `${user.name} is blocked and has been signed out`
+          : `${user.name} can sign in again`,
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof ApiError ? error.message : "Couldn't change that.",
+      );
       throw error;
     }
   }
@@ -98,7 +128,7 @@ export function UserRowActions({
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            disabled={isSelf || isAdmin}
+            disabled={isSelf || isAdmin || blocked}
             onSelect={(event) => {
               event.preventDefault();
               setConfirmImpersonate(true);
@@ -120,6 +150,27 @@ export function UserRowActions({
 
           <DropdownMenuSeparator />
 
+          {/* Unblocking is not destructive, so it does not get the red styling
+              — only shutting somebody out does. */}
+          <DropdownMenuItem
+            variant={blocked ? undefined : "destructive"}
+            disabled={isSelf}
+            onSelect={(event) => {
+              event.preventDefault();
+              setConfirmBlock(true);
+            }}
+          >
+            {blocked ? (
+              <>
+                <CircleCheck className="size-3.5" /> Unblock
+              </>
+            ) : (
+              <>
+                <Ban className="size-3.5" /> Block
+              </>
+            )}
+          </DropdownMenuItem>
+
           <DropdownMenuItem
             variant="destructive"
             disabled={isSelf}
@@ -132,6 +183,31 @@ export function UserRowActions({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <ConfirmDialog
+        open={confirmBlock}
+        onOpenChange={setConfirmBlock}
+        title={blocked ? `Unblock ${user.name}?` : `Block ${user.name}?`}
+        description={
+          blocked
+            ? `${user.email} will be able to sign in again straight away.`
+            : `${user.email} will be signed out immediately and refused at sign in.`
+        }
+        detail={
+          blocked ? (
+            <>Their conversations and meeting requests are untouched — they pick
+            up exactly where they left off.</>
+          ) : (
+            <>
+              Nothing is deleted. They keep their account and their history, and
+              you can undo this at any time. They will be told they have been
+              blocked and to contact an administrator.
+            </>
+          )
+        }
+        confirmLabel={blocked ? "Unblock" : "Block this account"}
+        onConfirm={() => setBlocked(!blocked)}
+      />
 
       <ConfirmDialog
         open={confirmImpersonate}

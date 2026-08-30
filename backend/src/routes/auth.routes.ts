@@ -177,6 +177,23 @@ authRoutes.post("/login", authLimiter, async (req, res) => {
   const ok = user && (await verifyPassword(password, user.passwordHash));
   if (!user || !ok) throw ApiError.unauthorized("Email or password is incorrect");
 
+  /*
+   * Checked only after the password verifies. Telling someone their account is
+   * blocked before they have proved it is theirs would let anybody test which
+   * addresses are blocked, and would say more about our members than a stranger
+   * should be able to learn.
+   *
+   * The ACCOUNT_BLOCKED code lets the sign-in screen show this as a standing
+   * notice rather than a toast that slides away before it is read.
+   */
+  if (user.isBlocked) {
+    throw new ApiError(
+      403,
+      "Your account has been blocked by the service provider. Please contact the administrator to resolve this.",
+      "ACCOUNT_BLOCKED",
+    );
+  }
+
   setSessionCookie(res, signToken({ sub: user.id, role: user.role }));
   res.json({
     user: {

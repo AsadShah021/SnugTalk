@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowRight, Eye, EyeOff, Loader2 } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Loader2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -62,6 +62,12 @@ export function AuthForm({ mode }: { mode: Mode }) {
   // Carried into the second step so we can send it back with the code — the
   // person shouldn't have to type their address twice.
   const [resetEmail, setResetEmail] = React.useState("");
+  /*
+   * Shown as a standing notice rather than a toast. A blocked person needs to
+   * read what happened and who to contact, and a toast slides away while they
+   * are still taking it in.
+   */
+  const [blockedMessage, setBlockedMessage] = React.useState<string | null>(null);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -71,6 +77,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     const password = String(form.get("password") ?? "");
 
     setLoading(true);
+    setBlockedMessage(null);
 
     if (mode === "forgot") {
       /*
@@ -108,6 +115,12 @@ export function AuthForm({ mode }: { mode: Mode }) {
       }
     } catch (error) {
       setLoading(false);
+
+      if (error instanceof ApiError && error.isBlocked) {
+        setBlockedMessage(error.message);
+        return;
+      }
+
       // The API returns a readable message for both "email taken" and
       // "email or password is incorrect".
       toast.error(
@@ -284,6 +297,21 @@ export function AuthForm({ mode }: { mode: Mode }) {
           {mode === "forgot" && "Enter your email and we'll send you a link to set a new password."}
         </p>
       </header>
+
+      {blockedMessage && (
+        <div
+          role="alert"
+          className="border-destructive/30 bg-destructive/[0.06] flex gap-3 rounded-2xl border p-4"
+        >
+          <ShieldAlert className="text-destructive mt-0.5 size-4.5 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold">This account is blocked</p>
+            <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
+              {blockedMessage}
+            </p>
+          </div>
+        </div>
+      )}
 
       {mode !== "forgot" && (
         <>

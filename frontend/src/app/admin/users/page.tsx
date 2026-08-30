@@ -143,7 +143,10 @@ export default function AdminUsersPage() {
                 {users.map((user) => (
                   <tr
                     key={user.id}
-                    className="border-border/50 hover:bg-muted/40 border-b transition-colors last:border-0"
+                    className={cn(
+                      "border-border/50 hover:bg-muted/40 border-b transition-colors last:border-0",
+                      user.isBlocked && "opacity-60",
+                    )}
                   >
                     <td className="px-5 py-3.5">
                       <Link href={`/admin/users/${user.id}`} className="flex items-center gap-3">
@@ -166,6 +169,9 @@ export default function AdminUsersPage() {
                         {!user.isVerified && (
                           <Badge variant="warning">Unverified</Badge>
                         )}
+                        {/* Blocked outranks unverified: it is the reason they
+                            cannot get in, and it is the one an admin acted on. */}
+                        {user.isBlocked && <Badge variant="destructive">Blocked</Badge>}
                       </span>
                     </td>
                     <td className="text-muted-foreground px-5 py-3.5">

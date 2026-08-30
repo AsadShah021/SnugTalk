@@ -169,6 +169,16 @@ googleRoutes.get("/google/callback", async (req, res) => {
     });
   }
 
+  // Google proving who they are does not un-block them. Without this, the
+  // "Continue with Google" button would be a way straight past the block.
+  if (user.isBlocked) {
+    return res.redirect(
+      `${env.appUrl}/sign-in?error=${encodeURIComponent(
+        "Your account has been blocked by the service provider. Please contact the administrator to resolve this.",
+      )}`,
+    );
+  }
+
   setSessionCookie(res, signToken({ sub: user.id, role: user.role }));
   res.redirect(`${env.appUrl}/dashboard`);
 });

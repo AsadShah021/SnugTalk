@@ -67,6 +67,15 @@ export class ApiError extends Error {
   get needsEmailVerification() {
     return this.status === 403 && this.code === "EMAIL_UNVERIFIED";
   }
+
+  /**
+   * An admin has closed this account. Worth its own check because the sign-in
+   * screen shows it as a standing notice rather than a toast — it tells the
+   * person what to do next, and they need time to read it.
+   */
+  get isBlocked() {
+    return this.status === 403 && this.code === "ACCOUNT_BLOCKED";
+  }
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -122,6 +131,10 @@ export interface ApiUser {
   role: Role;
   /** 0 until they've entered the emailed code. Google sign-ins arrive as 1. */
   isVerified: boolean;
+  /** Set by an admin. A blocked account keeps its data but cannot sign in. */
+  isBlocked?: boolean;
+  /** When the block was applied, or null if the account isn't blocked. */
+  blockedAt?: string | null;
   createdAt: string;
 }
 
